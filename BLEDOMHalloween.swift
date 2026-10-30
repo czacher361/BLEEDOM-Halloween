@@ -239,8 +239,9 @@ struct ContentView: View {
                         .disabled(ble.isScanning)
                         if !ble.devices.isEmpty {
                             
-    List(ble.devices) { device in
-                                    ble.connect(device)
+    List(ble.devices, id: \.identifier) { device in
+                                    Button {
+    ble.connect(device)
                                 } label: {
                                     HStack {
                                         Text(device.name ?? "BLE device")
