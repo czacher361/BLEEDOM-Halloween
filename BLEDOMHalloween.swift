@@ -189,7 +189,7 @@ struct ContentView: View {
                     .multilineTextAlignment(.center)
 
                 HStack(spacing: 12) {
-                    colorCard(title: "Orange", color: orange.color, hex: "#FF4500")
+                    colorCard(title: "Orange", color: orange.color, hex: "#CC3300")
                     colorCard(title: "Purple", color: purple.color, hex: "#8000FF")
                 }
 
