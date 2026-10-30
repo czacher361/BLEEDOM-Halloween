@@ -277,7 +277,7 @@ struct ContentView: View {
                         .disabled(ble.connectedName == nil)
                 }
             }
-        }
+        
         .onDisappear { stopCycle() }
     }
 
