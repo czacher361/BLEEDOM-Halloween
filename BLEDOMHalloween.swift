@@ -19,7 +19,7 @@ struct RGBColor: Equatable {
 
 final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     @Published var status = "Bluetooth initializing…"
-    @Published var devices: [CBPeripheral] = []
+    @Published var devices: [DiscoveredDevice] = []
     @Published var connectedName: String?
     @Published var isScanning = false
 
