@@ -1,0 +1,24 @@
+// !$*UTF8*$!
+{
+ archiveVersion = 1;
+ classes = {};
+ objectVersion = 56;
+ objects = {
+  A10000000000000000000001 /* BLEDOMHalloween.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDOMHalloween.swift; sourceTree = "<group>"; };
+  A10000000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+  A10000000000000000000003 /* BLEDOMHalloween.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BLEDOMHalloween.app; sourceTree = BUILT_PRODUCTS_DIR; };
+  A10000000000000000000004 /* Sources */ = {isa = PBXGroup; children = (A10000000000000000000001, A10000000000000000000002,); path = ""; sourceTree = "<group>"; };
+  A10000000000000000000005 /* Products */ = {isa = PBXGroup; children = (A10000000000000000000003,); name = Products; sourceTree = "<group>"; };
+  A10000000000000000000006 /* PBXProject */ = {isa = PBXProject; attributes = {LastUpgradeCheck = 1600; }; buildConfigurationList = A1000000000000000000000A; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; mainGroup = A10000000000000000000004; productRefGroup = A10000000000000000000005; projectDirPath = ""; projectRoot = ""; targets = (A10000000000000000000007,); };
+  A10000000000000000000007 /* BLEDOMHalloween */ = {isa = PBXNativeTarget; buildConfigurationList = A1000000000000000000000B; buildPhases = (A10000000000000000000008,); buildRules = (); dependencies = (); name = BLEDOMHalloween; productName = BLEDOMHalloween; productReference = A10000000000000000000003; productType = "com.apple.product-type.application"; };
+  A10000000000000000000008 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000009,); runOnlyForDeploymentPostprocessing = 0; };
+  A10000000000000000000009 /* BLEDOMHalloween.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001; };
+  A1000000000000000000000A = {isa = XCConfigurationList; buildConfigurations = (A1000000000000000000000C, A1000000000000000000000D,); defaultConfigurationIsVisible = 0; };
+  A1000000000000000000000B = {isa = XCConfigurationList; buildConfigurations = (A1000000000000000000000E, A1000000000000000000000F,); defaultConfigurationIsVisible = 0; };
+  A1000000000000000000000C /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; PRODUCT_BUNDLE_IDENTIFIER = com.example.BLEDOMHalloween; PRODUCT_NAME = "$(TARGET_NAME)"; INFOPLIST_FILE = Info.plist; GENERATE_INFOPLIST_FILE = NO; CODE_SIGNING_ALLOWED = NO; }; name = Debug; };
+  A1000000000000000000000D /* Release */ = {isa = XCBuildConfiguration; buildSettings = {IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; PRODUCT_BUNDLE_IDENTIFIER = com.example.BLEDOMHalloween; PRODUCT_NAME = "$(TARGET_NAME)"; INFOPLIST_FILE = Info.plist; GENERATE_INFOPLIST_FILE = NO; CODE_SIGNING_ALLOWED = NO; }; name = Release; };
+  A1000000000000000000000E /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; PRODUCT_BUNDLE_IDENTIFIER = com.example.BLEDOMHalloween; PRODUCT_NAME = "$(TARGET_NAME)"; INFOPLIST_FILE = Info.plist; GENERATE_INFOPLIST_FILE = NO; CODE_SIGNING_ALLOWED = NO; }; name = Debug; };
+  A1000000000000000000000F /* Release */ = {isa = XCBuildConfiguration; buildSettings = {IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; PRODUCT_BUNDLE_IDENTIFIER = com.example.BLEDOMHalloween; PRODUCT_NAME = "$(TARGET_NAME)"; INFOPLIST_FILE = Info.plist; GENERATE_INFOPLIST_FILE = NO; CODE_SIGNING_ALLOWED = NO; }; name = Release; };
+ };
+ rootObject = A10000000000000000000006;
+}
