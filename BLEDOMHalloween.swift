@@ -168,7 +168,7 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
         p.writeValue(Data(frame), for: c, type: .withoutResponse)
     }
 }
-}
+
 struct ContentView: View {
     @StateObject private var ble = BLEController()
     @State private var orange = RGBColor(r: 255, g: 69, b: 0)
