@@ -16,7 +16,11 @@ struct RGBColor: Equatable {
         Color(red: Double(r)/255, green: Double(g)/255, blue: Double(b)/255)
     }
 }
-
+struct DiscoveredDevice: Identifiable {
+    let peripheral: CBPeripheral
+    var id: UUID { peripheral.identifier }
+    var name: String? { peripheral.name }
+}
 final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     @Published var status = "Bluetooth initializing…"
     @Published var devices: [DiscoveredDevice] = []
