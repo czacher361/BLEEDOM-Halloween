@@ -325,11 +325,4 @@ struct ContentView: View {
         ble.sendColor(r: c.r, g: c.g, b: c.b, brightness: Int(brightness))
     }
 }
-struct DiscoveredDevice: Identifiable {
-    let peripheral: CBPeripheral
-    let displayName: String
 
-    var id: UUID {
-        peripheral.identifier
-    }
-}
