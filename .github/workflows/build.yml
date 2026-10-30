@@ -1,0 +1,28 @@
+name: Build BLEDOM Halloween IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build unsigned app
+        run: |
+          xcodebuild -project BLEDOMHalloween.xcodeproj \
+            -scheme BLEDOMHalloween \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO build
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/BLEDOMHalloween.app Payload/
+          /usr/bin/ditto -c -k --sequesterRsrc --keepParent Payload BLEDOMHalloween.ipa
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BLEDOMHalloween-ipa
+          path: BLEDOMHalloween.ipa
+          retention-days: 7
