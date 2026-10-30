@@ -12,22 +12,18 @@ struct RGBColor: Equatable {
     var r: UInt8
     var g: UInt8
     var b: UInt8
+
     var color: Color {
-        Color(red: Double(r)/255, green: Double(g)/255, blue: Double(b)/255)
+        Color(red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255)
     }
 }
+
 struct DiscoveredDevice: Identifiable {
     let peripheral: CBPeripheral
     let displayName: String
-
-    var id: UUID {
-        peripheral.identifier
-    }
-
-    var name: String? {
-        displayName
-    }
+    var id: UUID { peripheral.identifier }
 }
+
 final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     @Published var status = "Bluetooth initializing…"
     @Published var devices: [DiscoveredDevice] = []
@@ -38,7 +34,6 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
     private var connectedPeripheral: CBPeripheral?
     private var writeCharacteristic: CBCharacteristic?
     private var scanTimer: Timer?
-
     private let serviceUUID = CBUUID(string: "FFF0")
     private let writeUUID = CBUUID(string: "FFF3")
 
@@ -49,20 +44,13 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
-        case .poweredOn:
-            status = "Bluetooth ready"
-        case .poweredOff:
-            status = "Turn on Bluetooth"
-        case .unauthorized:
-            status = "Allow Bluetooth access in Settings"
-        case .unsupported:
-            status = "Bluetooth LE unsupported"
-        case .resetting:
-            status = "Bluetooth resetting…"
-        case .unknown:
-            status = "Bluetooth state unknown"
-        @unknown default:
-            status = "Bluetooth unavailable"
+        case .poweredOn: status = "Bluetooth ready"
+        case .poweredOff: status = "Turn on Bluetooth"
+        case .unauthorized: status = "Allow Bluetooth access in Settings"
+        case .unsupported: status = "Bluetooth LE unsupported"
+        case .resetting: status = "Bluetooth resetting…"
+        case .unknown: status = "Bluetooth state unknown"
+        @unknown default: status = "Bluetooth unavailable"
         }
     }
 
@@ -77,7 +65,7 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
         central.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
         scanTimer?.invalidate()
         scanTimer = Timer.scheduledTimer(withTimeInterval: 12, repeats: false) { [weak self] _ in
-            guard let self else { return }
+            guard let self = self else { return }
             self.central.stopScan()
             self.isScanning = false
             self.status = self.devices.isEmpty ? "No devices found. Move closer and scan again." : "Tap BLEDOM06 to connect"
@@ -85,6 +73,7 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
     }
 
     func stopScan() {
+        scanTimer?.invalidate()
         central.stopScan()
         isScanning = false
     }
@@ -96,7 +85,9 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
     }
 
     func disconnect() {
-        if let p = connectedPeripheral { central.cancelPeripheralConnection(p) }
+        if let peripheral = connectedPeripheral {
+            central.cancelPeripheralConnection(peripheral)
+        }
         connectedPeripheral = nil
         writeCharacteristic = nil
         connectedName = nil
@@ -104,9 +95,9 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-                       advertisementData: [String : Any], rssi RSSI: NSNumber) {
+                        advertisementData: [String: Any], rssi RSSI: NSNumber) {
         let name = peripheral.name ?? (advertisementData[CBAdvertisementDataLocalNameKey] as? String) ?? "Unknown BLE device"
-        if !devices.contains(where: { $0.peripheral.identifier == peripheral.identifier }) {
+        if !devices.contains(where: { $0.id == peripheral.identifier }) {
             devices.append(DiscoveredDevice(peripheral: peripheral, displayName: name))
             devices.sort { $0.displayName < $1.displayName }
         }
@@ -132,7 +123,7 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        if let error {
+        if let error = error {
             status = "Service discovery failed: \(error.localizedDescription)"
             return
         }
@@ -144,7 +135,7 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        if let error {
+        if let error = error {
             status = "Characteristic discovery failed: \(error.localizedDescription)"
             return
         }
@@ -158,25 +149,24 @@ final class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,
     }
 
     func sendColor(r: UInt8, g: UInt8, b: UInt8, brightness: Int) {
-        guard let p = connectedPeripheral, let c = writeCharacteristic else {
+        guard let peripheral = connectedPeripheral, let characteristic = writeCharacteristic else {
             status = "Connect to BLEDOM06 first"
             return
         }
-        // Scale RGB by brightness; color frame for Lotus Lantern / ELK-BLEDOM.
         let level = max(0, min(100, brightness))
         let rr = UInt8(Int(r) * level / 100)
         let gg = UInt8(Int(g) * level / 100)
         let bb = UInt8(Int(b) * level / 100)
         let frame: [UInt8] = [0x7E, 0x07, 0x05, 0x03, rr, gg, bb, 0x10, 0xEF]
-        p.writeValue(Data(frame), for: c, type: .withoutResponse)
+        peripheral.writeValue(Data(frame), for: characteristic, type: .withoutResponse)
     }
 
     func sendPower(_ on: Bool) {
-        guard let p = connectedPeripheral, let c = writeCharacteristic else { return }
+        guard let peripheral = connectedPeripheral, let characteristic = writeCharacteristic else { return }
         let frame: [UInt8] = on
             ? [0x7E, 0x04, 0x04, 0xF0, 0x00, 0x01, 0xFF, 0x00, 0xEF]
             : [0x7E, 0x04, 0x04, 0x00, 0x00, 0x00, 0xFF, 0x00, 0xEF]
-        p.writeValue(Data(frame), for: c, type: .withoutResponse)
+        peripheral.writeValue(Data(frame), for: characteristic, type: .withoutResponse)
     }
 }
 
@@ -248,16 +238,16 @@ struct ContentView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .disabled(ble.isScanning)
+
                         if !ble.devices.isEmpty {
-                            
-    List(ble.devices, id: \.identifier) { device in
-                                    Button {
-    ble.connect(device)
+                            List(ble.devices) { device in
+                                Button {
+                                    ble.connect(device.peripheral)
                                 } label: {
                                     HStack {
-                                        Text(device.name ?? "BLE device")
+                                        Text(device.displayName)
                                         Spacer()
-                                        if device.name?.localizedCaseInsensitiveContains("bledom") == true {
+                                        if device.displayName.localizedCaseInsensitiveContains("bledom") {
                                             Text("Likely controller")
                                                 .font(.caption)
                                                 .foregroundStyle(.green)
@@ -289,7 +279,7 @@ struct ContentView: View {
                         .disabled(ble.connectedName == nil)
                 }
             }
-        
+        }
         .onDisappear { stopCycle() }
     }
 
@@ -328,9 +318,7 @@ struct ContentView: View {
     }
 
     private func sendCurrent() {
-        let c = showingOrange ? orange : purple
-        ble.sendColor(r: c.r, g: c.g, b: c.b, brightness: Int(brightness))
+        let color = showingOrange ? orange : purple
+        ble.sendColor(r: color.r, g: color.g, b: color.b, brightness: Int(brightness))
     }
-    }
-    
-
+}
