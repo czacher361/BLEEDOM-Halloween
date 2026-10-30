@@ -238,8 +238,8 @@ struct ContentView: View {
                         .buttonStyle(.borderedProminent)
                         .disabled(ble.isScanning)
                         if !ble.devices.isEmpty {
-                            List(ble.devices, id: \.identifier) { device in
-                                Button {
+                            
+    List(ble.devices) { device in
                                     ble.connect(device)
                                 } label: {
                                     HStack {
